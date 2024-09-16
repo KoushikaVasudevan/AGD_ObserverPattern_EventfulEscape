@@ -7,18 +7,23 @@ public class LightSwitchView : MonoBehaviour, IInteractable
     private SwitchState currentState;
 
     public delegate void LightSwitchDelegate();
-    public static LightSwitchDelegate lightSwitch;
+    public static LightSwitchDelegate LightToggled;
 
     private void OnEnable()
     {
-        lightSwitch += OnLightSwitchToggled;
+        LightToggled += onLightSwitchToggled;
+    }
+
+    private void OnDisable()
+    {
+        LightToggled -= onLightSwitchToggled;
     }
 
     private void Start() => currentState = SwitchState.Off;
 
     public void Interact()
     {
-        lightSwitch.Invoke();
+        LightToggled.Invoke();
     }
     private void toggleLights()
     {
@@ -43,7 +48,7 @@ public class LightSwitchView : MonoBehaviour, IInteractable
         }
     }
 
-    private void OnLightSwitchToggled()
+    private void onLightSwitchToggled()
     {
         toggleLights();
         GameService.Instance.GetInstructionView().HideInstruction();
